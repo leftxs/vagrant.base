@@ -1,0 +1,18 @@
+---
+
+- name: Bootstrap base system
+  hosts: all
+  remote_user: vagrant
+  sudo: yes
+
+  tasks:
+  - name: Update Packages with apt-get update
+    apt: update_cache=yes
+  - name: Upgrade all Packages with apt-upgrade
+    apt: upgrade=safe
+  - name: Install all packages we need
+    apt: name={{item}} state=present
+    with_items:
+        - htop
+        - git
+        - vim
