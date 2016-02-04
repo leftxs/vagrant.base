@@ -1,6 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# This is needed for our custom settings
+require 'yaml'
+
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -26,13 +29,22 @@ Vagrant.configure(2) do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  config.vm.network "private_network", ip: "192.168.33.10"
-
+  if File.exist?("settings.yml")
+      custom = YAML::load_file("settings.yml")
+      config.vm.network "private_network", :ip => custom ['ip_address']
+  else
+  	  config.vm.network "private_network", ip: "192.168.33.10"
+  end
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
   # config.vm.network "public_network"
-  config.vm.hostname = "svx.io"
+  if File.exist?("settings.yml")
+      custom = YAML::load_file("settings.yml")
+      config.vm.hostname = custom ['dnsname']
+  else
+      config.vm.hostname = "svx.io"
+  end
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
@@ -47,10 +59,17 @@ Vagrant.configure(2) do |config|
   #   # Display the VirtualBox GUI when booting the machine
   #   vb.gui = true
   #
+  if File.exist?("settings.yml")
+      custom = YAML::load_file("settings.yml")
+      v.memory = custom ['mem']
+      v.cpus = custom ['cpu']
+  else
+  
   #   # Customize the amount of memory on the VM:
       v.memory = 1024
       v.cpus = 2
       v.name = "debian"
+   end
    end
   #
   # View the documentation for the provider you are using for more
