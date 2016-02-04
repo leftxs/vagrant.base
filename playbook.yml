@@ -16,3 +16,32 @@
         - htop
         - git
         - vim
+
+
+  - name: Create vim dir
+    file: path=/home/vagrant/.vim state=directory owner=vagrant group=vagrant
+
+  - name: Create subdir for colors
+    file: path=/home/vagrant/.vim/colors state=directory owner=vagrant group=vagrant
+
+  - name: Download molokai theme
+    sudo: no
+    command: wget -P /home/vagrant/.vim/colors https://raw.githubusercontent.com/tomasr/molokai/master/colors/molokai.vim
+
+  - name: Upload vimrc
+    copy: src=configs/vimrc dest=/home/vagrant/.vimrc owner=vagrant group=vagrant
+
+  - name: Upload filetype.vim
+    copy: src=configs/filetype.vim dest=/home/vagrant/.vim/filetype.vim owner=vagrant group=vagrant
+
+  - name: Cloning Vundle
+    sudo: no
+    git: repo=https://github.com/gmarik/Vundle.vim.git
+         dest=/home/vagrant/.vim/bundle/Vundle.vim
+
+  - name: Run vundle install
+    sudo: no
+    command: vim +PluginInstall! +qall
+
+  - name: Upload custom bash
+    copy: src=configs/bashrc dest=/home/vagrant/.bashrc owner=vagrant group=vagrant

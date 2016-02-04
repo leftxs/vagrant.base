@@ -51,6 +51,7 @@ Vagrant.configure(2) do |config|
       v.memory = 1024
       v.cpus = 2
       v.name = "debian"
+      v.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
    end
   #
   # View the documentation for the provider you are using for more
