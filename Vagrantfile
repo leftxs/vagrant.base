@@ -1,6 +1,11 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# Specify minimum Vagrant version and Vagrant API version
+Vagrant.require_version ">= 1.6.0"
+VAGRANTFILE_API_VERSION = "2"
+
+
 # This is needed for our custom settings
 require 'yaml'
 
@@ -25,7 +30,7 @@ Vagrant.configure(2) do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.network "forwarded_port", guest: 8000, host: 8000
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -33,14 +38,14 @@ Vagrant.configure(2) do |config|
       custom = YAML::load_file("settings.yml")
       config.vm.network "private_network", :ip => custom ['ip_address']
   else
-  	  config.vm.network "private_network", ip: "192.168.33.10"
+      config.vm.network "private_network", ip: "192.168.33.10"
   end
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
   # config.vm.network "public_network"
-  if File.exist?("settings.yml")
-      custom = YAML::load_file("settings.yml")
+  if File.exist?("settings.yaml")
+      custom = YAML::load_file("settings.yaml")
       config.vm.hostname = custom ['dnsname']
   else
       config.vm.hostname = "svx.io"
@@ -59,8 +64,8 @@ Vagrant.configure(2) do |config|
   #   # Display the VirtualBox GUI when booting the machine
   #   vb.gui = true
   #
-  if File.exist?("settings.yml")
-      custom = YAML::load_file("settings.yml")
+  if File.exist?("settings.yaml")
+      custom = YAML::load_file("settings.yaml")
       v.memory = custom ['mem']
       v.cpus = custom ['cpu']
   else
